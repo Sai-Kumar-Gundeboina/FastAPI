@@ -9,3 +9,4 @@ Prerequisites:
         => deactivate
     - Packages: after activation of virtual environment
         => pip install fastapi uvicorn
+        => uvicorn main:app --reload
