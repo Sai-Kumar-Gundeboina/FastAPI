@@ -37,7 +37,7 @@ def delete_product(id:int):
             return {"message": "success", "body": product}
     return {"message":"Invlaid product id", "id":id}
 
-@app.put("/product/")
+@app.put("/product")
 def update_product(product_id:int, prod: ProductUpdate):
     for product in products:
         if product.id == product_id:

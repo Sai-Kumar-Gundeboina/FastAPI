@@ -14,3 +14,7 @@ Prerequisites:
 REST - Representation State Transfer
     - sending data in Representation format
         {eg:JSON}
+
+SQL Alchemy:
+    - pip install sqlalchemy
+    - pip install psycopg2
