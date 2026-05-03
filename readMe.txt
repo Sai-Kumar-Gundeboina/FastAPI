@@ -11,6 +11,7 @@ Prerequisites:
 - Packages: after activation of virtual environment
     => pip install fastapi uvicorn
     => uvicorn main:app --reload
+    
 REST - Representation State Transfer
     - sending data in Representation format
         {eg:JSON}

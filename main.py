@@ -42,33 +42,39 @@ def get_all_products(db: Session = Depends(get_db)):
     return  db_products
 
 @app.get("/product/{id}")
-def get_product(id:int):
-    for product in products:
-        if product.id == id:
-            return product
-    return []
+def get_product(id:int, db: Session = Depends(get_db)):
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    
+    if db_product:
+        return db_product
+    
+    return {"message": "Product not found"}
 
 @app.post("/product")
-def add_product(product: Product):
-    products.append(product)
+def add_product(product: Product, db: Session = Depends(get_db)):
+    
+    db.add(database_models.Product(**product.model_dump()))
+    db.commit()
     return {"message": "success", "body": product}
 
 @app.delete("/product/{id}")
-def delete_product(id:int):
-    for product in products:
-        if product.id == id:
-            products.remove(product)
-            return {"message": "success", "body": product}
+def delete_product(id:int, db: Session = Depends(get_db)):
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    if db_product:
+        db.delete(db_product)
+        db.commit()
+        return {"message": "success"}
     return {"message":"Invlaid product id", "id":id}
 
 @app.put("/product")
-def update_product(product_id:int, prod: ProductUpdate):
-    for product in products:
-        if product.id == product_id:
-            updated_data = prod.dict(exclude_unset= True)
+def update_product(id:int, prod: ProductUpdate, db: Session = Depends(get_db)):
+    db_product = db.query(database_models.Product).filter(database_models.Product.id == id).first()
+    if db_product:
+        updated_data = prod.dict(exclude_unset= True)
 
-            for key, value in updated_data.items():
-                setattr(product, key , value)
-            return {"message":"success", "updated":product}
+        for key, value in updated_data.items():
+            setattr(db_product, key , value)
+        db.commit()
+        return {"message":"success"}
     return {"error":"Invalid Product Id"}
     
